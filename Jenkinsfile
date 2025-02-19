@@ -6,6 +6,11 @@ pipeline {
         maven 'Maven 3.8.7'
     }
 
+    environment {
+        DOCKER_IMAGE = 'skpandey1512/springboot-app'
+        DOCKER_TAG = 'latest'
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -29,11 +34,30 @@ pipeline {
                 sh 'mvn package'
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
+                '''
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub', url: ''https://hub.docker.com/]) {
+                    sh '''
+                    docker login -u skpandey1512 -p $DOCKER_PASSWORD
+                    docker push $DOCKER_IMAGE:$DOCKER_TAG
+                    '''
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo "🎉 Build Successful!"
+            echo "🎉 Build, Image Creation & Push to Docker Hub Successful!"
         }
         failure {
             echo "🚨 Build Failed!"
