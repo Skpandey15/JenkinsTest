@@ -9,19 +9,13 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/user/springboot-app.git'
+                git credentialsId: 'github', branch: 'master', url: 'https://github.com/Skpandey15/JenkinsTest.git'
             }
         }
 
         stage('Build & Test') {
             steps {
                 sh 'mvn clean install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'mvn test'
             }
             post {
                 always {
