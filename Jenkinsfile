@@ -34,7 +34,17 @@ pipeline {
                 sh 'mvn package'
             }
         }
-
+stage('Build Docker Image') {
+    steps {
+        sh '''
+        if [ ! -f Dockerfile ]; then
+            echo "❌ Dockerfile not found! Make sure it's present in the repository."
+            exit 1
+        fi
+        docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
+        '''
+    }
+}
         stage('Build Docker Image') {
             steps {
                 sh '''
