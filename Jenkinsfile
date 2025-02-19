@@ -45,14 +45,6 @@ stage('Build Docker Image') {
         '''
     }
 }
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
-                '''
-            }
-        }
-
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub', url: 'https://hub.docker.com/']) {
