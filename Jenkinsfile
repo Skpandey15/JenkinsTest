@@ -31,25 +31,26 @@ pipeline {
 
         stage('Package Application') {
             steps {
-                sh 'mvn package'
+                sh 'mvn clean package'  // Ensure the JAR file is created
             }
         }
-stage('Build Docker Image') {
-    steps {
-        sh '''
-        if [ ! -f Dockerfile ]; then
-            echo "❌ Dockerfile not found! Make sure it's present in the repository."
-            exit 1
-        fi
-        docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
-        '''
-    }
-}
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                if [ ! -f target/0.0.1-SNAPSHOT.jar ]; then
+                    echo "❌ JAR file not found! Ensure the build is successful and the JAR is located in target/"
+                    exit 1
+                fi
+                docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
+                '''
+            }
+        }
+
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub', url: 'https://hub.docker.com/']) {
                     sh '''
-                    docker login -u skpandey1512 -p $DOCKER_PASSWORD
                     docker push $DOCKER_IMAGE:$DOCKER_TAG
                     '''
                 }
