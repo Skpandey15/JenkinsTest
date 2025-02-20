@@ -38,7 +38,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                if [ ! -f target/JenkinsTest-0.0.1-SNAPSHOT.jar ]; then
+                # Check if any jar file exists in the target directory
+                if [ ! -f target/*.jar ]; then
                     echo "❌ JAR file not found! Ensure the build is successful and the JAR is located in target/"
                     exit 1
                 fi
@@ -57,6 +58,7 @@ pipeline {
                 }
             }
         }
+    }
 
     post {
         success {
