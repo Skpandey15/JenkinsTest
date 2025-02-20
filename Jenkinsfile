@@ -49,14 +49,14 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub', url: 'https://hub.docker.com/']) {
+                withDockerRegistry([credentialsId: 'dockerhub', url: 'docker.io']) {
                     sh '''
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                     docker push $DOCKER_IMAGE:$DOCKER_TAG
                     '''
                 }
             }
         }
-    }
 
     post {
         success {
