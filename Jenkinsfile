@@ -47,7 +47,14 @@ pipeline {
                 '''
             }
         }
-
+stage('Verify Environment Variables') {
+    steps {
+        script {
+            echo "DOCKER_USERNAME: $DOCKER_USERNAME"
+            echo "DOCKER_PASSWORD: $DOCKER_PASSWORD"
+        }
+    }
+}
         stage('Push to Docker Hub') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub', url: 'https://docker.io']) {
