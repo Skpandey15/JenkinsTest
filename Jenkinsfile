@@ -66,7 +66,7 @@ pipeline {
                 docker pull $DOCKER_IMAGE:$DOCKER_TAG
 
                 # Run the Docker container on your staging environment (e.g., using Docker CLI or a Kubernetes deploy command)
-                docker run -d -p 8082:8080 $DOCKER_IMAGE:$DOCKER_TAG
+                docker run -d -p 8083:8080 $DOCKER_IMAGE:$DOCKER_TAG
                 '''
             }
         }
